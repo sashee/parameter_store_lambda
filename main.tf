@@ -27,14 +27,15 @@ resource "aws_lambda_function" "lambda" {
   role    = aws_iam_role.lambda_exec.arn
   environment {
     variables = {
-      PARAMETER  = data.aws_ssm_parameter.test_secret.name
+      PARAMETER  = aws_ssm_parameter.test_secret.name
     }
   }
 }
 
-data "aws_ssm_parameter" "test_secret" {
+resource "aws_ssm_parameter" "test_secret" {
 	name = "test-secret"
-	with_decryption = false
+	type = "SecureString"
+  value = "test value"
 }
 
 data "aws_iam_policy_document" "lambda_exec_role_policy" {
@@ -43,7 +44,7 @@ data "aws_iam_policy_document" "lambda_exec_role_policy" {
 			"ssm:GetParameter",
     ]
     resources = [
-      data.aws_ssm_parameter.test_secret.arn
+      aws_ssm_parameter.test_secret.arn
     ]
   }
   statement {
