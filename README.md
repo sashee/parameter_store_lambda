@@ -1,6 +1,6 @@
 # Sample code to show how to cache SSM parametes gets with Javascript
 
-The caching function is implemented in the [main.js](main/index.js#L4).
+The caching function is implemented in the [main.js](index.js#L4).
 
 ## Deploy
 
