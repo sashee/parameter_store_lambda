@@ -1,6 +1,6 @@
 # Sample code to show how to cache SSM parametes gets with Javascript
 
-The caching function is implemented in the [main.js](index.js#L4).
+The caching function is implemented in the [main.js](index.mjs#L3).
 
 ## Deploy
 
@@ -11,7 +11,7 @@ The caching function is implemented in the [main.js](index.js#L4).
 
 To see the initial value (```test value```):
 
-```aws lambda invoke --function-name $(terraform output function) >(jq '.Parameter.Value') > /dev/null```
+```aws lambda invoke --function-name $(terraform output -raw function) >(jq '.Parameter.Value') > /dev/null```
 
 Modify the parameter:
 
@@ -19,7 +19,7 @@ Modify the parameter:
 
 Get the value a few times until the result changes (<30 sec):
 
-```aws lambda invoke --function-name $(terraform output function) >(jq '.Parameter.Value') > /dev/null```
+```aws lambda invoke --function-name $(terraform output -raw function) >(jq '.Parameter.Value') > /dev/null```
 
 ## Cleanup
 

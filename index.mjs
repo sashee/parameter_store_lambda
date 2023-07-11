@@ -1,5 +1,4 @@
-const AWS = require("aws-sdk");
-const ssm = new AWS.SSM();
+import {SSMClient, GetParameterCommand} from "@aws-sdk/client-ssm";
 
 const cacheSsmGetParameter = (params, cacheTime) => {
 	let lastRefreshed = undefined;
@@ -9,7 +8,7 @@ const cacheSsmGetParameter = (params, cacheTime) => {
 		const res = queue.then(async () => {
 			const currentTime = new Date().getTime();
 			if (lastResult === undefined || lastRefreshed + cacheTime < currentTime) {
-				lastResult = await ssm.getParameter(params).promise();
+				lastResult = await new SSMClient().send(new GetParameterCommand(params));
 				lastRefreshed = currentTime;
 			}
 			return lastResult;
@@ -21,7 +20,7 @@ const cacheSsmGetParameter = (params, cacheTime) => {
 
 const getParam = cacheSsmGetParameter({Name: process.env.PARAMETER, WithDecryption: true}, 15 * 1000);
 
-module.exports.handler = async (event) => {
+export const handler = async (event) => {
 	const param = await getParam();
 	return param;
 };

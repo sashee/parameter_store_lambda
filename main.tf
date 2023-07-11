@@ -11,8 +11,8 @@ data "archive_file" "lambda_zip" {
   type        = "zip"
   output_path = "/tmp/${random_id.id.hex}-lambda.zip"
 	source {
-    content  = file("index.js")
-    filename = "index.js"
+    content  = file("index.mjs")
+    filename = "index.mjs"
   }
 }
 
@@ -23,7 +23,7 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   handler = "index.handler"
-  runtime = "nodejs12.x"
+  runtime = "nodejs18.x"
   role    = aws_iam_role.lambda_exec.arn
   environment {
     variables = {
